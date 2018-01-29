@@ -2,7 +2,7 @@
   Напишите функцию, которая принимает 1 аргумент и возварщает его тип
 */
 function getDataType(variable) {
-
+  return typeof variable;
 }
 
 /*
@@ -15,6 +15,22 @@ function getDataType(variable) {
 */
 function getDataTypePseudoName(variable) {
 
+  switch (typeof variable) {
+    case 'boolean':
+    case 'number':
+    case 'string':
+    case 'symbol':
+      return 'primitive';
+    case 'undefined':
+      return 'primitive-special';
+    case 'function':
+      return 'object-function';
+    case 'object':
+      if (variable === null) return 'primitive-special';
+      else if (Array.isArray(variable)) return 'object-array';
+      return 'object';
+  }
+
 }
 
 
@@ -25,7 +41,15 @@ function getDataTypePseudoName(variable) {
   и -1 в другом случае
 */
 function compareByType(a, b) {
-
+  if (a === b) {
+    return 1;
+  }
+  else if (a == b) {
+    return 0;
+  }
+  else {
+    return -1;
+  }
 }
 
 // Numbers
@@ -37,7 +61,8 @@ function compareByType(a, b) {
   в любом другом случае возврвщвет -1
 */
 function increase(value) {
-
+  if (typeof value === 'number') return ++value;
+  return -1;
 }
 
 /*
@@ -45,7 +70,7 @@ function increase(value) {
   и в случае если аргумент не Infinity или NaN возвращает строку 'safe' иначе 'danger'
 */
 function testForSafeNumber(value) {
-
+  return (!isFinite(value) && isNaN(value)) ? 'danger' : 'safe';
 }
 
 
@@ -57,7 +82,7 @@ function testForSafeNumber(value) {
   и возвращает массив из елементов строки разделенных по пробелу ' '
 */
 function stringToArray(str) {
-
+  return str.split(' ');
 }
 
 
@@ -66,7 +91,7 @@ function stringToArray(str) {
   и возвращает часть этой строки до первой запятой
 */
 function getStringPart(str) {
-
+  return str.split(',')[0];
 }
 
 /*
@@ -75,7 +100,7 @@ function getStringPart(str) {
   false в противоположном случае
 */
 function isSingleSymbolMatch(str, symbol) {
-
+  return (str.split(symbol).length === 2) ? str.indexOf(symbol): false;
 }
 
 /*
@@ -84,8 +109,8 @@ function isSingleSymbolMatch(str, symbol) {
   и возвращает строку ввиде элементов массива c разделителями если разделитель задан
   или строку разделенную "-" если не задан
 */
-function join(array, separator) {
-
+function join(array, separator='-') {
+  return array.join(separator);
 }
 
 
@@ -94,7 +119,7 @@ function join(array, separator) {
   и возвращает один состоящий из элементов перового и второго (последовательно сначала первый потом второй)
 */
 function glue(arrA, arrB) {
-
+  return [...arrA, ...arrB];
 }
 
 
@@ -103,7 +128,7 @@ function glue(arrA, arrB) {
   и возвращает другой массив отсортированный от большего к меньшему
 */
 function order(arr) {
-
+  return arr.sort().reverse();
 }
 
 
@@ -112,7 +137,7 @@ function order(arr) {
   и возвращает другой без чисел которые меньше 0
 */
 function removeNegative(arr) {
-
+  return arr.filter( (val) => val > 0);
 }
 
 /*
@@ -122,7 +147,13 @@ function removeNegative(arr) {
   [1,2,3], [1, 3] => [2]
 */
 function without(arrA, arrB) {
-
+  var resArr = [];
+  
+  for (let item of arrA){
+    if (!arrB.includes(item)) resArr.push(item);
+  }
+  
+  return resArr;
 }
 
 /*
@@ -133,7 +164,7 @@ function without(arrA, arrB) {
   '12/6' => 2
 */
 function calcExpression(expression) {
-
+  return eval(expression);
 }
 
 /*
@@ -145,7 +176,12 @@ function calcExpression(expression) {
   '100>5' => true
 */
 function calcComparison(expression) {
-
+  try{
+    return eval(expression);
+  }
+  catch(err){
+    console.log(err.name, err.message);
+  }
 }
 
 /*
