@@ -100,7 +100,7 @@ function getStringPart(str) {
   false в противоположном случае
 */
 function isSingleSymbolMatch(str, symbol) {
-  return (str.split(symbol).length === 2) ? str.indexOf(symbol): false;
+  return (str.split(symbol).length === 2) ? str.indexOf(symbol) : false;
 }
 
 /*
@@ -109,9 +109,13 @@ function isSingleSymbolMatch(str, symbol) {
   и возвращает строку ввиде элементов массива c разделителями если разделитель задан
   или строку разделенную "-" если не задан
 */
-function join(array, separator='-') {
-  return array.join(separator);
+function join(array, separator) {
+  return array.join(separator ? separator : '-');
 }
+
+/*function join(array, separator = '-') {
+  return array.join(separator);
+}*/
 
 
 /*
@@ -137,7 +141,7 @@ function order(arr) {
   и возвращает другой без чисел которые меньше 0
 */
 function removeNegative(arr) {
-  return arr.filter( (val) => val > 0);
+  return arr.filter((val) => val > 0);
 }
 
 /*
@@ -147,12 +151,12 @@ function removeNegative(arr) {
   [1,2,3], [1, 3] => [2]
 */
 function without(arrA, arrB) {
-  var resArr = [];
-  
-  for (let item of arrA){
+  let resArr = [];
+
+  for (let item of arrA) {
     if (!arrB.includes(item)) resArr.push(item);
   }
-  
+
   return resArr;
 }
 
@@ -164,7 +168,23 @@ function without(arrA, arrB) {
   '12/6' => 2
 */
 function calcExpression(expression) {
-  return eval(expression);
+  let operator = expression.match(/\+|\-|\/|\*/)[0];
+
+  let strNumbers = expression.split(operator);
+  let first = +strNumbers[0].trim();
+  let second = +strNumbers[1].trim();
+
+  switch (operator) {
+    case '+':
+      return first + second;
+    case '-':
+      return first - second;
+    case '/':
+      return first / second;
+    case '*':
+      return first * second;
+  }
+
 }
 
 /*
@@ -176,12 +196,10 @@ function calcExpression(expression) {
   '100>5' => true
 */
 function calcComparison(expression) {
-  try{
-    return eval(expression);
-  }
-  catch(err){
-    console.log(err.name, err.message);
-  }
+  let operator = expression.match(/>=|<=|>|<|=/)[0];
+  
+  return (operator === '=') ? eval(expression.replace('=', '==')) : eval(expression);
+  
 }
 
 /*
@@ -193,7 +211,18 @@ function calcComparison(expression) {
   { a: 1, b: 2 }, '.c' => exception
 */
 function evalKey(obj, expression) {
+  let str = 'obj';
+  let keys = expression.split('.').slice(1);
 
+  if (!keys[0]) return eval(str + expression);
+  
+  for (let k of keys){
+    str += `['${k}']`;
+  }
+  
+  if (!eval(str)) throw new Error();
+  
+  return eval(str);
 }
 
 export default {
