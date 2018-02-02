@@ -4,5 +4,5 @@ module.exports = {
   rootDir: path.join(process.cwd(), './'),
   collectCoverage: true,
   verbose: true,
-  roots: ['gl-jsprocamp-tests']
+  roots: ['__tests__']
 };
