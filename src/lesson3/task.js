@@ -13,8 +13,8 @@ export function countOptional(a, b, ...rest) {
 export function bindContext(fn, context) {
   let args = [].slice.call(arguments, 2);
 
-  return function() {
-    return fn.apply(context, args);
+  return function(...rest) {
+    return fn.apply(context, [...args, ...rest]);
   };
 }
 
