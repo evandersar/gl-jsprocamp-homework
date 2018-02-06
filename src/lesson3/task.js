@@ -10,12 +10,13 @@ export function countOptional(a, b, ...rest) {
 /*
   Write your implementation of native Function.prototype.bind method
 */
-export function bindContext(fn, context, ...rest) {
+export function bindContext(fn, context) {
+  let args = [].slice.call(arguments, 2);
+
   return function() {
-    return fn.apply(context, rest);
+    return fn.apply(context, args);
   };
 }
-
 
 /*
   Write function that accepts 1 parameter - object. It should add to this object a log interface so as:
@@ -75,18 +76,9 @@ export function compose(...funcs) {
   sumWith4(5) // 9
 */
 export function partial(fn) {
-  const arity = fn.length;
-
-  return (function resolver(...rest) {
-    let memory = [...rest];
-
-    return (...rest) => {
-      const local = [...memory, ...rest];
-      const next = local.length === arity ? fn : resolver;
-      return next.apply(null, local);
-    };
-  })();
-
+  return function(...args){
+    return fn.bind(null, ...args);
+  };
 }
 
 export default {
