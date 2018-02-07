@@ -61,7 +61,7 @@ function compareByType(a, b) {
   в любом другом случае возврвщвет -1
 */
 function increase(value) {
-  if (typeof value === 'number') return ++value;
+  if (typeof value === 'number' && !isNaN(value)) return ++value;
   return -1;
 }
 
@@ -70,7 +70,7 @@ function increase(value) {
   и в случае если аргумент не Infinity или NaN возвращает строку 'safe' иначе 'danger'
 */
 function testForSafeNumber(value) {
-  return (!isFinite(value) && isNaN(value)) ? 'danger' : 'safe';
+  return (!isFinite(value) || isNaN(value)) ? 'danger' : 'safe';
 }
 
 
@@ -132,7 +132,9 @@ function glue(arrA, arrB) {
   и возвращает другой массив отсортированный от большего к меньшему
 */
 function order(arr) {
-  return arr.sort().reverse();
+  let newArr = arr.slice();
+  if(typeof newArr[0] === 'string') return newArr.sort().reverse();
+  return newArr.sort((a, b) => b - a);
 }
 
 
@@ -141,7 +143,7 @@ function order(arr) {
   и возвращает другой без чисел которые меньше 0
 */
 function removeNegative(arr) {
-  return arr.filter((val) => val > 0);
+  return arr.filter((val) => val >= 0);
 }
 
 /*
@@ -168,9 +170,16 @@ function without(arrA, arrB) {
   '12/6' => 2
 */
 function calcExpression(expression) {
-  let operator = expression.match(/\+|\-|\/|\*/)[0];
+  
+  //let regExp = /\+|\-|\/|\*/ig;
+  //regExp.lastIndex = 1;
+  //let operator = regExp.exec(expression.trim())[0];
+  
+  let operator = expression.trim().substr(1).match(/\+|\-|\/|\*/)[0];
+  //console.log('operator => ', operator);
 
   let strNumbers = expression.split(operator);
+  //console.log('strNumbers => ', strNumbers);
   let first = +strNumbers[0].trim();
   let second = +strNumbers[1].trim();
 
