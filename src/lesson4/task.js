@@ -11,22 +11,21 @@
 export function createSet(arr) {
 
   function mySet(args) {
-    var collection = args || [];
+    this.collection = args ? args.slice() : [];
 
-    this.size = collection.length;
-    //this.values = collection;
-    //this.getSize = () => collection.length;
-
+    //this.size = this.collection.length;
+    //this.getSize = () => this.collection.length;
+    
     this.has = (element) => {
-      return collection.includes(element);
+      return this.collection.includes(element);
     };
 
     this.add = (element) => {
       if (this.has(element)) {
         return false;
       }
-      collection.push(element);
-      this.size++;
+      this.collection.push(element);
+      //this.size++;
       return true;
     };
 
@@ -34,25 +33,33 @@ export function createSet(arr) {
       if (!this.has(element)) {
         return false;
       }
-      collection.splice(collection.indexOf(element), 1);
-      this.size--;
+      this.collection.splice(this.collection.indexOf(element), 1);
+      //this.size--;
       return true;
     };
 
     this.clear = () => {
-      collection = [];
-      this.size = 0;
+      this.collection = [];
+      //this.size = 0;
     };
 
     this.forEach = (fn) => {
-      for (let item of collection) {
+      for (let item of this.collection) {
         fn(item);
       }
     };
 
   }
 
-  return new mySet(arr);
+  let mySetObj = new mySet(arr);
+
+  Object.defineProperty(mySetObj, "size", {
+    get: function() {
+      return this.collection.length;
+    }
+  });
+
+  return mySetObj;
 }
 
 /*
@@ -66,29 +73,27 @@ export function createSet(arr) {
   myMap = createMap([['a', 1], ['b', 2], ['c', 3]])
 */
 export function createMap(arr) {
-  
+
   function myMap(args) {
-    var collection = args || [];
-    this.size = collection.length;
+    this.collection = args ? args.slice() : [];
 
     this.has = (key) => {
-      return collection.some(elem => elem[0] === key);
+      return this.collection.some(elem => elem[0] === key);
     };
 
     this.set = (key, value) => {
       if (this.has(key)) {
         return false;
       }
-      collection.push([key, value]);
-      this.size++;
+      this.collection.push([key, value]);
       return true;
     };
-    
+
     this.get = (key) => {
-      let pair = collection.find((elem) => {
-        return elem[0] === key; 
+      let pair = this.collection.find((elem) => {
+        return elem[0] === key;
       });
-      
+
       return pair[1];
     };
 
@@ -97,29 +102,35 @@ export function createMap(arr) {
         return false;
       }
       //console.log('collection => ', collection);
-      let startInd = collection.findIndex((elem, index, arr) => {
+      let startInd = this.collection.findIndex((elem, index, arr) => {
         return elem[0] === key;
       });
-      collection.splice(startInd, 1);
+      this.collection.splice(startInd, 1);
       //console.log('collection spliced=> ', collection);
-      this.size--;
       return true;
     };
 
     this.clear = () => {
-      collection = [];
-      this.size = 0;
+      this.collection = [];
     };
 
     this.forEach = (fn) => {
-      for (let [key, value] of collection) {
+      for (let [key, value] of this.collection) {
         fn(value, key);
       }
     };
 
   }
+  
+  let myMapObj = new myMap(arr);
 
-  return new myMap(arr);
+  Object.defineProperty(myMapObj, "size", {
+    get: function() {
+      return this.collection.length;
+    }
+  });
+
+  return myMapObj;
 }
 
 export default {
