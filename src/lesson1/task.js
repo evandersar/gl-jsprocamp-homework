@@ -180,8 +180,9 @@ function calcExpression(expression) {
 
   let strNumbers = expression.split(operator);
   //console.log('strNumbers => ', strNumbers);
-  let first = +strNumbers[0].trim();
-  let second = +strNumbers[1].trim();
+  let first = parseInt(strNumbers[0].trim());
+  let second = parseInt(strNumbers[1].trim());
+  //console.log('first, second => ', first,second);
 
   switch (operator) {
     case '+':
@@ -222,11 +223,12 @@ function calcComparison(expression) {
 function evalKey(obj, expression) {
   let str = 'obj';
   let keys = expression.split('.').slice(1);
+  //console.log('keys => ', keys);
 
   if (!keys[0]) return eval(str + expression);
   
   for (let k of keys){
-    str += `['${k}']`;
+    str += `['${k.trim()}']`;
   }
   
   if (!eval(str)) throw new Error();

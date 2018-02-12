@@ -75,10 +75,18 @@ export function createSet(arr) {
 export function createMap(arr) {
 
   function myMap(args) {
+    
+    function checkNan(x, y){
+      return Number.isNaN(x) && Number.isNaN(y);
+    }
+    
     this.collection = args ? args.slice() : [];
 
     this.has = (key) => {
-      return this.collection.some(elem => elem[0] === key);
+      return this.collection.some(elem =>{
+        if (checkNan(key, elem[0])) return true;
+        return elem[0] === key;
+      });
     };
 
     this.set = (key, value) => {
@@ -91,6 +99,7 @@ export function createMap(arr) {
 
     this.get = (key) => {
       let pair = this.collection.find((elem) => {
+        if (checkNan(key, elem[0])) return true;
         return elem[0] === key;
       });
 
@@ -103,6 +112,7 @@ export function createMap(arr) {
       }
       //console.log('collection => ', collection);
       let startInd = this.collection.findIndex((elem, index, arr) => {
+        if (checkNan(key, elem[0])) return true;
         return elem[0] === key;
       });
       this.collection.splice(startInd, 1);
