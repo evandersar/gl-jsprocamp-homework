@@ -41,10 +41,72 @@ const monsterClasses = {
   }
 };
 
+const game = {
+  statuses: {
+    idle: "Idle",
+    progress: "In progress",
+    finished: "Finished"
+  },
+  maxMonsters: 2
+};
+
 
 const Game = function() {
+  this.status = game.statuses.idle;
+  this.hero;
+  this.monsters = [];
+};
 
-}
+Game.prototype = {
+  addHero(character) {
+    if (this.hero) throw new Error('Only one hero can exist');
+    if (!(character instanceof Hero)) throw new Error('Only hero instance can be hero');
+
+    this.hero = character;
+    return `Hero created, welcome ${character.getName()}`;
+  },
+  
+  addMonster(character) {
+    if (this.monsters.length === 2) throw new Error('Only 2 monsters can exist');
+    if (!(character instanceof Monster)) throw new Error('Only monster Instances can become monsters');
+
+    this.monsters.push(character);
+    return `Monster Created, ${character.getCharClass()} appeared in the world`;
+  },
+  
+  beginJourney() {
+    if (!this.hero && this.monsters.length !== 2) throw new Error('Cannot start journey, populate the world with hero and monsters first');
+
+    this.status = game.statuses.progress;
+    return 'Your journey has started, fight monsters';
+  },
+  
+  fight() {
+    if (this.status !== game.statuses.progress) throw new Error('Begin your journey to start fighting monsters');
+    
+    let currentMonster = this.monsters[0].life !== 0 ? this.monsters[0] : this.monsters[1];
+    
+    while (this.hero.life !== 0 && currentMonster.life !== 0){
+      this.hero.attack(currentMonster);
+      currentMonster.attack(this.hero);
+    }
+    
+    return this.hero.life !== 0 ? 'Hero win': 'Monster win';
+  },
+  
+  finishJourney(){
+    const isMonstersDead = this.monsters[0].life === 0 && this.monsters[1].life === 0;
+    const isHeroDead = this.hero.life === 0;
+    let message = 'Don`t stop. Some monsters are still alive. Kill`em all';
+    
+    if (isMonstersDead) message = 'The Game is finished. Monsters are dead. Congratulations';
+    if (isHeroDead) message = 'The Game is finished. Hero is dead :(';
+    
+    if (isMonstersDead || isHeroDead) this.status = game.statuses.finished;
+    return message;
+  }
+};
+
 
 const Character = function(props) {
   this.name = props.name;
@@ -71,7 +133,7 @@ Character.prototype = {
   getCharClass() {
     return this.charClass;
   }, // function returning character class
-  
+
   getName() {
     return this.name || `I am ${this.getCharClass()} I don\`t have name`;
   }, // function returning name
@@ -108,14 +170,6 @@ const Monster = function(charClass) {
 
 Monster.prototype = Object.create(Character.prototype);
 Monster.prototype.constructor = Monster;
-
-
-
-var warrior = new Hero("test-hero-warrior", "warrior");
-
-console.log(warrior.getCharClass());
-
-
 
 
 /* Game Population mechanism should go below */
