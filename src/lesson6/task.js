@@ -49,7 +49,7 @@ const getPilots = function(starshipName) {
       return response.json();
     })
     .then(function(json) {
-      console.log('json => ', json.results[0]);
+      //console.log('json => ', json.results[0]);
       return json.results[0];
     })
     .catch(error => console.error('Error:', error));
