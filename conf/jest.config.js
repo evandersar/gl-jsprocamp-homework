@@ -4,5 +4,5 @@ module.exports = {
   rootDir: path.join(process.cwd(), './'),
   collectCoverage: true,
   verbose: true,
-  roots: ['__tests__/lesson5.test.js']
+  roots: ['__tests__/lesson6.test.js']
 };
